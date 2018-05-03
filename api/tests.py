@@ -64,19 +64,26 @@ class RestaurantAPITest(TestCase):
         list_url = reverse("api-list")
         request = self.factory.get(list_url)
         response = RestaurantListView.as_view()(request)
-        self.assertEqual(
-            [
+        expected = [
                 {
                     'name':self.restaurant_1.name,
                     'opening_time': self.restaurant_1.opening_time,
                     'closing_time': self.restaurant_1.closing_time,
+                    'detail': "http://"+ request.get_host()+reverse("api-detail", kwargs = {"restaurant_id": self.restaurant_1.id}),
+                    'update': "http://"+ request.get_host()+reverse("api-update", kwargs = {"restaurant_id": self.restaurant_1.id}),
+                    'delete': "http://"+ request.get_host()+reverse("api-delete", kwargs = {"restaurant_id": self.restaurant_1.id})
                 },
                 {
                     'name':self.restaurant_2.name,
                     'opening_time': self.restaurant_2.opening_time,
                     'closing_time': self.restaurant_2.closing_time,
+                    'detail': "http://"+ request.get_host()+reverse("api-detail", kwargs = {"restaurant_id": self.restaurant_2.id}),
+                    'update': "http://"+ request.get_host()+reverse("api-update", kwargs = {"restaurant_id": self.restaurant_2.id}),
+                    'delete': "http://"+ request.get_host()+reverse("api-delete", kwargs = {"restaurant_id": self.restaurant_2.id})
                 },
-            ],
+            ]
+        self.assertEqual(
+            expected,
             response.data
         )
         self.assertEqual(response.status_code, 200)
@@ -93,6 +100,8 @@ class RestaurantAPITest(TestCase):
                 'description':self.restaurant_1.description,
                 'opening_time': self.restaurant_1.opening_time,
                 'closing_time': self.restaurant_1.closing_time,
+                'update': "http://"+ request.get_host()+reverse("api-update", kwargs = {"restaurant_id": self.restaurant_1.id}),
+                'delete': "http://"+ request.get_host()+reverse("api-delete", kwargs = {"restaurant_id": self.restaurant_1.id})
             },
             response.data
         )
